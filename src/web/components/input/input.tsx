@@ -6,8 +6,7 @@ export interface InputProps {
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
-const Input = (props: InputProps) => {
-    const { label, onChange } = props;
+const Input = ({label, onChange}: InputProps) => {
     return (
         <div className="input-group mb-2 mt-2 pl-2 pr-2">
             <div className="input-group-prepend">

@@ -12,6 +12,9 @@ export interface initialUser {
     },
     picture: {
         thumbnail: string
+    },
+    login: {
+        uuid: string
     }
 }
 
@@ -19,7 +22,8 @@ export interface User {
     name: string,
     age: number,
     city: string,
-    picture: string
+    picture: string,
+    id: string
 }
 
 

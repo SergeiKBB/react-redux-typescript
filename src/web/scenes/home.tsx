@@ -1,14 +1,15 @@
 import React, {ChangeEvent, Component} from 'react';
 import axios from "axios";
 import UserList from "../views/usersList/userList";
-import {filterUsersByCity, filterUsersByName, transformUser} from "../../helpers/core";
+import {filterUsers, transformUser} from "../../helpers/core";
 import Input from "../components/input/input";
 import './home.css';
 
 class Home extends Component {
     state = {
         users: [],
-        filteredUsers: []
+        name: '',
+        city: ''
     };
 
     componentDidMount() {
@@ -19,33 +20,27 @@ class Home extends Component {
                     filteredUsers: results.map(transformUser)
                 })
             })
+            .catch(error => console.log(error))
     };
 
-    filterByName = (event: ChangeEvent<HTMLInputElement>) => {
+    handleName = (event: ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
-        const { users } = this.state;
-
-        this.setState({
-            filteredUsers: filterUsersByName(users, name)
-        })
+        this.setState({name})
     };
 
-    filterByCity = (event: ChangeEvent<HTMLInputElement>) => {
+    handleCity = (event: ChangeEvent<HTMLInputElement>) => {
         const city = event.target.value;
-        const { users } = this.state;
-
-        this.setState({
-            filteredUsers: filterUsersByCity(users, city)
-        })
+        this.setState({city})
     };
 
     render() {
-        const { filteredUsers } = this.state;
+        const { users, name, city } = this.state;
+        const filteredUsers = filterUsers(users, name, city);
         return (
             <div className='home'>
                 <div className='filter'>
-                    <Input label='Name' onChange={this.filterByName} />
-                    <Input label='City' onChange={this.filterByCity} />
+                    <Input label='Name' onChange={this.handleName} />
+                    <Input label='City' onChange={this.handleCity} />
                 </div>
                 <UserList users={filteredUsers}/>
             </div>

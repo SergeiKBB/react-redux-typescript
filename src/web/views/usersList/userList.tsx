@@ -1,17 +1,11 @@
-import React, {Component} from 'react';
+import React from 'react';
 import UserCard from "../../components/userCard/userCard";
 import {User} from "../../../interfaces/core";
 
-
-export interface UsersListProps {
-    users: User[]
-}
-
-class UserList extends Component<UsersListProps> {
-    render() {
-        const {users} = this.props;
-        return users.map(user => <UserCard user={user}/>)
-    }
+function UserList({users}: {users: User[]}) {
+    return <React.Fragment>
+        {users.map(user => <UserCard user={user} key={user.id}/>)}
+    </React.Fragment>
 }
 
 export default UserList
