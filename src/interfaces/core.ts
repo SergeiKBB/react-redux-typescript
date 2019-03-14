@@ -26,4 +26,9 @@ export interface User {
     id: string
 }
 
-
+export interface State {
+    users: {
+        list: initialUser[],
+        isLoad: boolean
+    }
+}

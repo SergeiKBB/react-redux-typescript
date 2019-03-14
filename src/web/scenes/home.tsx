@@ -1,25 +1,28 @@
 import React, {ChangeEvent, Component} from 'react';
-import axios from "axios";
 import UserList from "../views/usersList/userList";
-import {filterUsers, transformUser} from "../../helpers/core";
+import {filterUsers} from "../../helpers/core";
+import {State, User} from '../../interfaces/core';
 import Input from "../components/input/input";
 import './home.css';
+import {connect} from "react-redux";
+import {Dispatch} from "redux";
+import {getUsers} from "../../core/users/actions";
+import {usersSelector} from "../../core/users/selectors";
 
-class Home extends Component {
+export interface HomeProps {
+    getUsers: () => any,
+    users: any
+}
+
+class Home extends Component<HomeProps> {
     state = {
-        users: [],
         name: '',
         city: ''
     };
 
     componentDidMount() {
-        axios.get('https://randomuser.me/api/?nat=gb&results=5')
-            .then(({data: {results}}) => {
-                this.setState({
-                    users: results.map(transformUser)
-                })
-            })
-            .catch(error => console.log(error))
+        const { getUsers } = this.props;
+        getUsers();
     };
 
     handleName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +36,8 @@ class Home extends Component {
     };
 
     render() {
-        const { users, name, city } = this.state;
+        const { name, city } = this.state;
+        const { users } = this.props;
         const filteredUsers = filterUsers(users, name, city);
         return (
             <div className='home'>
@@ -47,4 +51,12 @@ class Home extends Component {
     }
 }
 
-export default Home;
+const mapStateToProps = (state: State) => ({
+    users: usersSelector(state)
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    getUsers: () => dispatch(getUsers())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
