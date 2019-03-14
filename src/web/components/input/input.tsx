@@ -12,7 +12,7 @@ const Input = ({label, onChange}: InputProps) => {
             <div className="input-group-prepend">
                 <div className="input-group-text">{label}</div>
             </div>
-            <input type="text" onChange={onChange} className="form-control" id="inlineFormInputGroup" />
+            <input type="text" onChange={onChange} className="form-control" />
         </div>
     )
 };

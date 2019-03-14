@@ -16,8 +16,7 @@ class Home extends Component {
         axios.get('https://randomuser.me/api/?nat=gb&results=5')
             .then(({data: {results}}) => {
                 this.setState({
-                    users: results.map(transformUser),
-                    filteredUsers: results.map(transformUser)
+                    users: results.map(transformUser)
                 })
             })
             .catch(error => console.log(error))
