@@ -1,7 +1,7 @@
 import {initialUser, User} from "../interfaces/core";
 
 export function filterUsers(users: User[], name: string, city: string) {
-    return users.filter(user => (user.name.includes(name) && user.city.includes(city)))
+    return users.filter(user => ((user.name).toLowerCase().includes(name.toLowerCase()) && (user.city).toLowerCase().includes(city.toLowerCase())))
 }
 
 export function transformUser(user: initialUser) {
