@@ -23,7 +23,8 @@ export interface User {
     age: number,
     city: string,
     picture: string,
-    id: string
+    id: string,
+    status: number
 }
 
 export interface State {

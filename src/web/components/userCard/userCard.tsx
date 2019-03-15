@@ -5,13 +5,14 @@ import {User} from "../../../interfaces/core";
 
 
 interface UserCardProps {
-    user: User
+    user: User,
+    disableLeftBtn: boolean
+    disableRightBtn: boolean
 }
 
 class UserCard extends Component<UserCardProps> {
     render() {
-        const {user: {name, age, city, picture}} = this.props;
-
+        const {user: {name, age, city, picture, id}, disableLeftBtn, disableRightBtn} = this.props;
         return (
             <div className="card mb-3 card__wrapper">
                 <div className="row no-gutters">
@@ -25,6 +26,10 @@ class UserCard extends Component<UserCardProps> {
                             <p className="card-text m-0">City: {city}</p>
                         </div>
                     </div>
+                </div>
+                <div className="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" className="btn btn-secondary">{disableLeftBtn ? null : <i className="fas fa-caret-left" />}</button>
+                    <button type="button" className="btn btn-secondary">{disableRightBtn ? null : <i className="fas fa-caret-right" />}</button>
                 </div>
             </div>
         )

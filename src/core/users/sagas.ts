@@ -1,5 +1,5 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
-import { getUsers, getUsersBegin, getUsersSuccessful ,getUsersError} from './actions';
+import {getUsers, getUsersBegin, getUsersSuccessful, getUsersError} from './actions';
 import { fetchUsers } from '../../helpers/api';
 
 export function* getUsersAsync(): IterableIterator<any> {

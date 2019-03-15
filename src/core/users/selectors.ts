@@ -5,3 +5,5 @@ export const usersSelector = (state: State) => {
     const { users: { list } } = state;
     return list ? list.map(transformUser) : []
 };
+
+export const usersLoadingSelector = (state: State) => state.users.isLoad;
