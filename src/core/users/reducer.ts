@@ -1,26 +1,26 @@
-import {handleActions} from "redux-actions";
+import {handleActions, ReducerMap} from "redux-actions";
 import {changeStatus, getUsersBegin, getUsersError, getUsersSuccessful} from "./actions";
 import {changeStatusHelper} from "../../helpers/core";
-import {UsersState} from "../../interfaces/core";
+import {IUsersState} from "../../interfaces/core";
 
 
-
-const initialState: UsersState = {
+const initialState: IUsersState = {
     list: [],
     isLoad: false
 };
 
-export default handleActions({
-        [getUsersBegin.toString()]: (state) => ({...state, isLoad: true}),
-        [getUsersSuccessful.toString()]: (state, {payload}) => ({...state, list: payload, isLoad: false}),
-        [getUsersError.toString()]: (state, {payload}) => ({...state, error: payload}),
-        [changeStatus.toString()]: (state, {payload}) => {
-            const {id, status} = payload;
-            const list = changeStatusHelper(state.list, payload.id, payload.status);
-            return {
-                ...state,
-                list
-            }
+const reducer: ReducerMap<IUsersState, any> = {
+    [getUsersBegin.toString()]: (state) => ({...state, isLoad: true}),
+    [getUsersSuccessful.toString()]: (state, {payload}) => ({...state, list: payload, isLoad: false}),
+    [getUsersError.toString()]: (state, {payload}) => ({...state, error: payload}),
+    [changeStatus.toString()]: (state, {payload}) => {
+        const {id, status} = payload;
+        const list = changeStatusHelper(state.list, id, status);
+        return {
+            ...state,
+            list
         }
-    },
-    initialState)
+    }
+};
+
+export default handleActions(reducer, initialState);

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import './userCard.css';
-import {User} from "../../../interfaces/core";
+import {IUser} from "../../../interfaces/core";
 import {STATUS} from "../../../helpers/constants";
 
 
 
 interface UserCardProps {
-    user: User,
+    user: IUser,
     disableLeftBtn: boolean
     disableRightBtn: boolean,
     changeStatus: (status: string, id: string) => void,
@@ -14,7 +14,7 @@ interface UserCardProps {
 
 class UserCard extends Component<UserCardProps> {
 
-    moveTo = (status: string, action: number) => {
+    moveTo = (status: string, action: number): string => {
       const indexCurrentStatus = STATUS.indexOf(status);
       return STATUS[indexCurrentStatus + action];
     };

@@ -1,4 +1,4 @@
-export interface initialUser {
+export interface IInitialUser {
     name: {
         title: string,
         first: string,
@@ -18,11 +18,11 @@ export interface initialUser {
     }
 }
 
-export interface initialUserWithStatus extends initialUser{
+export interface IInitialUserWithStatus extends IInitialUser{
     status: string
 }
 
-export interface User {
+export interface IUser {
     name: string,
     age: number,
     city: string,
@@ -31,11 +31,20 @@ export interface User {
     status: string
 }
 
-export interface UsersState {
-    list: initialUserWithStatus[],
+export interface IUsersState {
+    list: IInitialUserWithStatus[],
     isLoad: boolean
 }
 
-export interface State {
-    users: UsersState
+export interface IState {
+    users: IUsersState
+}
+
+export interface ISplitUsersToGroups {
+    [index: string]: IUser[]
+}
+
+export interface IUsersGroupsProps {
+    groups: { [index: string]: IUser[] },
+    onChangeStatus: (status: string, id: string) => void
 }

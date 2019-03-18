@@ -1,13 +1,13 @@
-import {initialUser, initialUserWithStatus, User} from "../interfaces/core";
+import {IInitialUserWithStatus, ISplitUsersToGroups, IUser} from "../interfaces/core";
 import {STATUS} from "./constants";
 
-export function filterUsers(users: User[], name: string, city: string): User[] {
+export function filterUsers(users: IUser[], name: string, city: string): IUser[] {
     return users
         ? users.filter(user => ((user.name).toLowerCase().includes(name.toLowerCase()) && (user.city).toLowerCase().includes(city.toLowerCase())))
         : []
 }
 
-export function transformUser(user: initialUserWithStatus): User {
+export function transformUser(user: IInitialUserWithStatus): IUser {
     return {
         name: `${user.name.title} ${user.name.first} ${user.name.last}`,
         age: user.dob.age,
@@ -22,8 +22,8 @@ export function getRndStatus(): string {
     return STATUS[Math.floor(Math.random() * Math.floor(STATUS.length))];
 }
 
-export function splitUsersToGroups(users: User[]): { [index: string]: User[] } {
-    const groups: { [index: string]: User[] } = {};
+export function splitUsersToGroups(users: IUser[]): ISplitUsersToGroups {
+    const groups: { [index: string]: IUser[] } = {};
     STATUS.forEach(item => {
         groups[item] = []
     });
@@ -33,7 +33,7 @@ export function splitUsersToGroups(users: User[]): { [index: string]: User[] } {
     return groups;
 }
 
-export function changeStatusHelper(users: initialUserWithStatus[], id: string, status: string): initialUserWithStatus[] {
+export function changeStatusHelper(users: IInitialUserWithStatus[], id: string, status: string): IInitialUserWithStatus[] {
     return users.map(user => {
         if(user.login.uuid === id) {
             return {

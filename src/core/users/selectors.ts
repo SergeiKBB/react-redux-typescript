@@ -1,9 +1,9 @@
-import {State} from "../../interfaces/core";
+import {IState, IUser} from "../../interfaces/core";
 import {transformUser} from "../../helpers/core";
 
-export const usersSelector = (state: State) => {
+export const usersSelector = (state: IState): IUser[] => {
     const { users: { list } } = state;
     return list ? list.map(transformUser) : []
 };
 
-export const usersLoadingSelector = (state: State) => state.users.isLoad;
+export const usersLoadingSelector = (state: IState): boolean => state.users.isLoad;

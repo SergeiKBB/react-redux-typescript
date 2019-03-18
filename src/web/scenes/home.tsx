@@ -1,17 +1,17 @@
 import React, {ChangeEvent, Component} from 'react';
-import {filterUsers, splitUsersToGroups} from "../../helpers/core";
-import {State, User} from '../../interfaces/core';
-import Input from "../components/input/input";
-import './home.css';
-import {connect} from "react-redux";
 import {Dispatch} from "redux";
+import {connect} from "react-redux";
+import {filterUsers, splitUsersToGroups} from "../../helpers/core";
+import {IState, IUser} from '../../interfaces/core';
+import Input from "../components/input/input";
 import {changeStatus, getUsers} from "../../core/users/actions";
 import {usersLoadingSelector, usersSelector} from "../../core/users/selectors";
-import UserCard from "../components/userCard/userCard";
+import UsersGroups from "../views/usersGroups/usersGroups";
+import './home.css';
 
 export interface HomeProps {
     getUsers: () => void,
-    users: User[],
+    users: IUser[],
     isLoad: boolean,
     onChangeStatus: (status: string, id: string) => void
 }
@@ -38,30 +38,9 @@ class Home extends Component<HomeProps> {
         this.setState({city})
     };
 
-    renderGroups = (groups: { [index: string]: User[] }) => {
-        const { onChangeStatus } = this.props;
-        const groupsArray = Object.keys(groups);
-        return (<div className='row'>
-            {groupsArray.map(
-                (status, i) => (
-                    <div className='col' key={status}>
-                        <h4>{status.toUpperCase()}</h4>
-                        {groups[status].map(user =>
-                            <UserCard
-                                changeStatus={onChangeStatus}
-                                user={user} key={user.id}
-                                disableLeftBtn={i === 0}
-                                disableRightBtn={i === groupsArray.length - 1}
-                            />)}
-                    </div>
-                )
-            )}
-        </div>)
-    };
-
     render() {
         const {name, city} = this.state;
-        const {users} = this.props;
+        const {users, onChangeStatus} = this.props;
         const filteredUsers = filterUsers(users, name, city);
         const groups = splitUsersToGroups(filteredUsers);
         return (
@@ -70,13 +49,13 @@ class Home extends Component<HomeProps> {
                     <Input label='Name' onChange={this.handleName}/>
                     <Input label='City' onChange={this.handleCity}/>
                 </div>
-                {this.renderGroups(groups)}
+                <UsersGroups groups={groups} onChangeStatus={onChangeStatus} />
             </div>
         )
     }
 }
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: IState) => ({
     users: usersSelector(state),
     isLoad: usersLoadingSelector(state)
 });
