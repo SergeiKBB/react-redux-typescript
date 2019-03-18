@@ -18,18 +18,24 @@ export interface initialUser {
     }
 }
 
+export interface initialUserWithStatus extends initialUser{
+    status: string
+}
+
 export interface User {
     name: string,
     age: number,
     city: string,
     picture: string,
     id: string,
-    status: number
+    status: string
+}
+
+export interface UsersState {
+    list: initialUserWithStatus[],
+    isLoad: boolean
 }
 
 export interface State {
-    users: {
-        list: initialUser[],
-        isLoad: boolean
-    }
+    users: UsersState
 }

@@ -1,18 +1,26 @@
 import React, {Component} from 'react';
 import './userCard.css';
 import {User} from "../../../interfaces/core";
+import {STATUS} from "../../../helpers/constants";
 
 
 
 interface UserCardProps {
     user: User,
     disableLeftBtn: boolean
-    disableRightBtn: boolean
+    disableRightBtn: boolean,
+    changeStatus: (status: string, id: string) => void,
 }
 
 class UserCard extends Component<UserCardProps> {
+
+    moveTo = (status: string, action: number) => {
+      const indexCurrentStatus = STATUS.indexOf(status);
+      return STATUS[indexCurrentStatus + action];
+    };
+
     render() {
-        const {user: {name, age, city, picture, id}, disableLeftBtn, disableRightBtn} = this.props;
+        const {user: {name, age, city, picture, id, status}, disableLeftBtn, disableRightBtn, changeStatus} = this.props;
         return (
             <div className="card mb-3 card__wrapper">
                 <div className="row no-gutters">
@@ -28,8 +36,12 @@ class UserCard extends Component<UserCardProps> {
                     </div>
                 </div>
                 <div className="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" className="btn btn-secondary">{disableLeftBtn ? null : <i className="fas fa-caret-left" />}</button>
-                    <button type="button" className="btn btn-secondary">{disableRightBtn ? null : <i className="fas fa-caret-right" />}</button>
+                    {disableLeftBtn
+                        ?  <button type="button" className="btn btn-secondary">{null}</button>
+                        : <button type="button" className="btn btn-secondary" onClick={() => changeStatus(this.moveTo(status,-1), id)}><i className="fas fa-caret-left" /></button>}
+                    {disableRightBtn
+                        ? <button type="button" className="btn btn-secondary">{null}</button>
+                        : <button type="button" className="btn btn-secondary" onClick={() => changeStatus(this.moveTo(status,1), id)}>{disableRightBtn ? null : <i className="fas fa-caret-right" />}</button>}
                 </div>
             </div>
         )

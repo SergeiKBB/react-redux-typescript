@@ -5,15 +5,15 @@ import Input from "../components/input/input";
 import './home.css';
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
-import {getUsers} from "../../core/users/actions";
+import {changeStatus, getUsers} from "../../core/users/actions";
 import {usersLoadingSelector, usersSelector} from "../../core/users/selectors";
 import UserCard from "../components/userCard/userCard";
-import {type} from "os";
 
 export interface HomeProps {
-    getUsers: () => any,
+    getUsers: () => void,
     users: User[],
-    isLoad: boolean
+    isLoad: boolean,
+    onChangeStatus: (status: string, id: string) => void
 }
 
 class Home extends Component<HomeProps> {
@@ -38,18 +38,21 @@ class Home extends Component<HomeProps> {
         this.setState({city})
     };
 
-    handleChangeStatus = (id: number, type: number) => {
-
-    };
-
     renderGroups = (groups: { [index: string]: User[] }) => {
+        const { onChangeStatus } = this.props;
         const groupsArray = Object.keys(groups);
         return (<div className='row'>
             {groupsArray.map(
                 (status, i) => (
                     <div className='col' key={status}>
                         <h4>{status.toUpperCase()}</h4>
-                        {groups[status].map(user => <UserCard user={user} key={user.id} disableLeftBtn={i === 0} disableRightBtn={i === groupsArray.length-1}/>)}
+                        {groups[status].map(user =>
+                            <UserCard
+                                changeStatus={onChangeStatus}
+                                user={user} key={user.id}
+                                disableLeftBtn={i === 0}
+                                disableRightBtn={i === groupsArray.length - 1}
+                            />)}
                     </div>
                 )
             )}
@@ -79,7 +82,8 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    getUsers: () => dispatch(getUsers())
+    getUsers: () => dispatch(getUsers()),
+    onChangeStatus: (status: string, id: string) => dispatch(changeStatus({status, id}))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
