@@ -1,1 +1,1 @@
-export const STATUS = ['applied', 'interviewing', 'hired'];
+export const STATUSES = ['applied', 'interviewing', 'hired'];

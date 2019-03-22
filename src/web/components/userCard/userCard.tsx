@@ -1,22 +1,21 @@
 import React, {Component} from 'react';
 import './userCard.css';
 import {IUser} from "../../../interfaces/core";
-import {STATUS} from "../../../helpers/constants";
-
+import {STATUSES} from "../../../helpers/constants";
 
 
 interface UserCardProps {
     user: IUser,
     disableLeftBtn: boolean
     disableRightBtn: boolean,
-    changeStatus: (status: string, id: string) => void,
+    changeStatus: ({status, id} :{status: string, id: string}) => void,
 }
 
 class UserCard extends Component<UserCardProps> {
 
     moveTo = (status: string, action: number): string => {
-      const indexCurrentStatus = STATUS.indexOf(status);
-      return STATUS[indexCurrentStatus + action];
+        const indexCurrentStatus = STATUSES.indexOf(status);
+        return STATUSES[indexCurrentStatus + action];
     };
 
     render() {
@@ -36,12 +35,22 @@ class UserCard extends Component<UserCardProps> {
                     </div>
                 </div>
                 <div className="btn-group" role="group" aria-label="Basic example">
-                    {disableLeftBtn
-                        ?  <button type="button" className="btn btn-secondary">{null}</button>
-                        : <button type="button" className="btn btn-secondary" onClick={() => changeStatus(this.moveTo(status,-1), id)}><i className="fas fa-caret-left" /></button>}
-                    {disableRightBtn
-                        ? <button type="button" className="btn btn-secondary">{null}</button>
-                        : <button type="button" className="btn btn-secondary" onClick={() => changeStatus(this.moveTo(status,1), id)}>{disableRightBtn ? null : <i className="fas fa-caret-right" />}</button>}
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        disabled={disableLeftBtn}
+                        onClick={() => changeStatus({status: this.moveTo(status, -1), id})}
+                    >
+                        {disableLeftBtn || <i className="fas fa-caret-left"/>}
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        disabled={disableRightBtn}
+                        onClick={() => changeStatus({status: this.moveTo(status, 1), id})}
+                    >
+                        {disableRightBtn || <i className="fas fa-caret-right"/>}
+                    </button>
                 </div>
             </div>
         )

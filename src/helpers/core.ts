@@ -1,5 +1,5 @@
 import {IInitialUserWithStatus, ISplitUsersToGroups, IUser} from "../interfaces/core";
-import {STATUS} from "./constants";
+import {STATUSES} from "./constants";
 
 export function filterUsers(users: IUser[], name: string, city: string): IUser[] {
     return users
@@ -19,28 +19,19 @@ export function transformUser(user: IInitialUserWithStatus): IUser {
 }
 
 export function getRndStatus(): string {
-    return STATUS[Math.floor(Math.random() * Math.floor(STATUS.length))];
+    return STATUSES[Math.floor(Math.random() * Math.floor(STATUSES.length))];
 }
 
 export function splitUsersToGroups(users: IUser[]): ISplitUsersToGroups {
     const groups: { [index: string]: IUser[] } = {};
-    STATUS.forEach(item => {
+    STATUSES.forEach(item => {
         groups[item] = []
     });
-    users.forEach(user => {
-        groups[user.status] = [...groups[user.status], user]
-    });
-    return groups;
+    return users.reduce((prev: { [index: string]: IUser[] }, current: IUser): any => {
+        return {...prev, [current.status]: [...prev[current.status], current]}
+    }, groups);
 }
 
 export function changeStatusHelper(users: IInitialUserWithStatus[], id: string, status: string): IInitialUserWithStatus[] {
-    return users.map(user => {
-        if(user.login.uuid === id) {
-            return {
-                ...user,
-                status
-            }
-        }
-        return user
-    })
+    return users.map(user => user.login.uuid === id ? { ...user, status } : user);
 }

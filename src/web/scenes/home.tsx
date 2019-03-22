@@ -1,6 +1,6 @@
 import React, {ChangeEvent, Component} from 'react';
-import {Dispatch} from "redux";
 import {connect} from "react-redux";
+import {createStructuredSelector} from 'reselect';
 import {filterUsers, splitUsersToGroups} from "../../helpers/core";
 import {IState, IUser} from '../../interfaces/core';
 import Input from "../components/input/input";
@@ -13,7 +13,7 @@ export interface HomeProps {
     getUsers: () => void,
     users: IUser[],
     isLoad: boolean,
-    onChangeStatus: (status: string, id: string) => void
+    onChangeStatus: ({status, id} : {status: string, id: string}) => void
 }
 
 class Home extends Component<HomeProps> {
@@ -49,20 +49,24 @@ class Home extends Component<HomeProps> {
                     <Input label='Name' onChange={this.handleName}/>
                     <Input label='City' onChange={this.handleCity}/>
                 </div>
-                <UsersGroups groups={groups} onChangeStatus={onChangeStatus} />
+                <UsersGroups groups={groups} onChangeStatus={onChangeStatus}/>
             </div>
         )
     }
 }
 
-const mapStateToProps = (state: IState) => ({
-    users: usersSelector(state),
-    isLoad: usersLoadingSelector(state)
-});
+interface IDesiredSelection {
+    users: IUser[],
+    isLoad: boolean
+}
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    getUsers: () => dispatch(getUsers()),
-    onChangeStatus: (status: string, id: string) => dispatch(changeStatus({status, id}))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(
+    createStructuredSelector<IState, IDesiredSelection>({
+        users: usersSelector,
+        isLoad: usersLoadingSelector
+    })
+    ,
+    {
+        getUsers: getUsers,
+        onChangeStatus: changeStatus
+    })(Home);

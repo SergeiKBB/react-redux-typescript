@@ -46,5 +46,5 @@ export interface ISplitUsersToGroups {
 
 export interface IUsersGroupsProps {
     groups: { [index: string]: IUser[] },
-    onChangeStatus: (status: string, id: string) => void
+    onChangeStatus: ({status, id}: {status: string, id: string}) => void
 }
