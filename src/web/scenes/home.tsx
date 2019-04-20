@@ -1,25 +1,31 @@
 import React, {ChangeEvent, Component} from 'react';
-import axios from "axios";
-import UserList from "../views/usersList/userList";
-import {filterUsers, transformUser} from "../../helpers/core";
+import {connect} from "react-redux";
+import {createStructuredSelector} from 'reselect';
+import {filterUsers, splitUsersToGroups} from "../../helpers/core";
+import {IState, IUser} from '../../interfaces/core';
 import Input from "../components/input/input";
+import {changeStatus, getUsers} from "../../core/users/actions";
+import {usersLoadingSelector, usersSelector} from "../../core/users/selectors";
+import UsersGroups from "../views/usersGroups/usersGroups";
 import './home.css';
 
-class Home extends Component {
+export interface HomeProps {
+    getUsers: () => void,
+    users: IUser[],
+    isLoad: boolean,
+    onChangeStatus: ({status, id} : {status: string, id: string}) => void
+}
+
+class Home extends Component<HomeProps> {
     state = {
-        users: [],
         name: '',
-        city: ''
+        city: '',
+        groups: {}
     };
 
     componentDidMount() {
-        axios.get('https://randomuser.me/api/?nat=gb&results=5')
-            .then(({data: {results}}) => {
-                this.setState({
-                    users: results.map(transformUser)
-                })
-            })
-            .catch(error => console.log(error))
+        const {getUsers} = this.props;
+        getUsers();
     };
 
     handleName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -33,18 +39,34 @@ class Home extends Component {
     };
 
     render() {
-        const { users, name, city } = this.state;
+        const {name, city} = this.state;
+        const {users, onChangeStatus} = this.props;
         const filteredUsers = filterUsers(users, name, city);
+        const groups = splitUsersToGroups(filteredUsers);
         return (
             <div className='home'>
                 <div className='filter'>
-                    <Input label='Name' onChange={this.handleName} />
-                    <Input label='City' onChange={this.handleCity} />
+                    <Input label='Name' onChange={this.handleName}/>
+                    <Input label='City' onChange={this.handleCity}/>
                 </div>
-                <UserList users={filteredUsers}/>
+                <UsersGroups groups={groups} onChangeStatus={onChangeStatus}/>
             </div>
         )
     }
 }
 
-export default Home;
+interface IDesiredSelection {
+    users: IUser[],
+    isLoad: boolean
+}
+
+export default connect(
+    createStructuredSelector<IState, IDesiredSelection>({
+        users: usersSelector,
+        isLoad: usersLoadingSelector
+    })
+    ,
+    {
+        getUsers: getUsers,
+        onChangeStatus: changeStatus
+    })(Home);

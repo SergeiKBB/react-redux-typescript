@@ -1,5 +1,4 @@
 import React, {ChangeEvent} from 'react';
-import './input.css';
 
 export interface InputProps {
     label: string,
